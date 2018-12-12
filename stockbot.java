@@ -1,13 +1,13 @@
 /**
  * A program to carry on conversations with a human user.
  * This version:
- *<ul><li>
+ *
  *      Uses advanced search for keywords 
- *</li><li>
+ *
  *      Will transform statements as well as react to keywords
- *</li></ul>
- * @author Laurie White
- * @version April 2012
+ *
+ * @author Aadhav Sivakumar, Kevin Li, Alex Miller
+ * @version December 2018
  *
  */
 
@@ -36,10 +36,17 @@ public class stockbot
         {
             response = "Say something, please.";
         }
+        else if(statement=="hello"){
+            response = "hi!";
+        }
+        
+        
         else if(findKeyword(statement, "I want to invest in", 0)>-1){
             response = transformIWantToInvestInStatement(statement);
         }
-        
+        else if(findKeyword(statement, "market cap", 0)>-1){
+            response = transformMarketCap(statement);
+        }
 
         // Responses which require transformations
         
@@ -61,8 +68,9 @@ public class stockbot
     {
         //  Remove the final period, if there is one
         int share_index=0;
-        String[] company_list = new String[]{"Bank of America","Wells Fargo"};
-        String[] prices = new String[]{"24.74","47.66"};
+        
+        String[] company_list = new String[]{"Bank of America","Wells Fargo","Apple","Amazon","Microsoft","Google"};
+        String[] prices = new String[]{"24.74","47.66","170.40","1169.00","110.89","1,068.00"};
         statement = statement.trim();
         String lastChar = statement.substring(statement
                 .length() - 1);
@@ -77,18 +85,55 @@ public class stockbot
             int temp = findKeyword (statement,company_list[i], 0);
             if(temp > 0){
                     share_index=i;
+                    
                 i = 20;
     
           }
         }
+        
         String restOfStatement = prices[share_index];
-        return "Right now, one share costs " + restOfStatement + ".";
+        return "Right now, one share costs $" + restOfStatement + ".";
+    
     
     
     }
 
 
+    private String transformMarketCap(String statement)
+    {
+        //  Remove the final period, if there is one
+        int mkt_index=0;
+        
+        String[] company_list = new String[]{"Bank of America","Wells Fargo","Apple","Amazon","Microsoft","Google"};
+        String[] mkt_caps = new String[]{"243.24B","226.18B","810.18B","829.38B","850.05B","751.67B"};
+        statement = statement.trim();
+        String lastChar = statement.substring(statement
+                .length() - 1);
+        if (lastChar.equals("."))
+        {
+            statement = statement.substring(0, statement
+                    .length() - 1);
+        }
+        int psn = findKeyword (statement, "market cap", 0);
+        
+        for(int i=0;i>company_list.length;i++){
+            int temp = findKeyword (statement,company_list[i], 0);
+            if(temp > 0){
+                    mkt_index=i;
+                    
+                i = 20;
     
+          }
+        }
+    
+        String restOfStatement = mkt_caps[mkt_index];
+        return "Its market cap is $" + restOfStatement + ".";
+    
+       
+    }
+    
+    
+
     
     
     
@@ -216,7 +261,7 @@ public class stockbot
         }
         else if (whichResponse == 12)
         {
-            response = "Where dod you study?";
+            response = "Where did you study?";
         }
         else if (whichResponse == 13)
         {
